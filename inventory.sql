@@ -75,7 +75,7 @@ Insert into services  VALUES
 (1, 'WomanTrim', 'Cuts', '300.0', 60.0),
 (2, 'WomanCut', 'Cuts', '500.00', 60.0),
 (3, 'MenCut', 'Cuts', '400.00', 30.0),
-(4, 'Balayage', 'Colours', '1200.00', 120.00),
+(4, 'Balayage', 'Colours', '1100.00', 120.00),
 (5, 'Highlights', 'Colours', '1000.00', 90.00),
 (6, 'Semi-permanent colour', 'Colours', '600.00', 90.00),
 (7, 'Toner', 'Colours', '800.00', '90.00'),

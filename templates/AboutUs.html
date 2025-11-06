@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hairdresser Website Design</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+
+/* ZA
+
+Skip navigation
+Search
+
+
+
+Create
+
+
+Avatar image
+
+ZA */
+
+  .navbar-nav .nav-link:hover {
+        color: blue !important; /* Bootstrap primary blue */
+      } 
+
+</style>  
+   
+</head>
+<body>
+  
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+          <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="100" height="60" class="d-inline-block align-text-top">
+        </a>
+        <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('index')}}" aria-current="page" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('Services')}}" >Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('AboutUs')}}">About Us</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('Book')}}">Schedule a session</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('Products')}}">Products</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login')}}">Login</a>
+          </li>
+        </ul>
+       
+      </div>
+    </nav>
+
+    <style> 
+      body{
+        background-image: url('{{ url_for('static', filename='images/Salon.jpg') }}');
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+      }
+    </style>
+
+    
+    <image src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="300" height="160" class="d-inline-block align-text-top mx-auto d-block mt-4">
+<div class="text-bg-light p-3 mx-auto mt-4" style="width:50%; min-width:260px; font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;font-size: larger;" >
+  Established in 2022 — our hairdresser salon has been providing top quality services for all hair types. We pride ourselves on our exceptional customer service and skilled stylists who are dedicated to making you look and feel your best. 
+  We continue to constantly improve your experience by being a world class salon that gives you the cabability of having your very own customer profile, with personalised recommendations. We also offer online booking for your convenience. We support sustainability by working on paperless systems. 
+  We hope you have a wonderful experience with us!
+</div>
+
+ <div class="container mt-4">
+      <h4 class = "text-center text-bg-light p-3">Our team is dedicated to ensure that your styling dreams become a reality...</h4>
+
+  </div>
+  <style>
+    .card-img-top{
+        width: 100%;
+        height: 500px;
+        object-fit: cover;
+    }
+  </style>
+   <div class="container text-center">
+  <div class="row g-3">
+    <div class="col-12 col-md-3">
+      <div class="card h-100">
+        <img src="{{ url_for('static', filename='images/caty.jpeg') }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text"><h4>Caty</h4>
+          This talented young lady speciales in basic cuts as well as special occasion styles to suite you matric farewell, dine, party or everyday needs.
+          She is also a expert when it comes to your children and their hair care needs.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="card h-100">
+        <img src="{{ url_for('static', filename='images/jake.jpeg') }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">
+            <h4>Jake</h4>
+          Jake used to do celebrety hairstyles in the US, but moved to South Africa to focus on his family. 
+          He is an expert in almost anything and everything, and he is sure to provide you with some very interesting discussions. 
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="card h-100">
+        <img src="{{ url_for('static', filename='images/stacey.jpeg') }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text"><h4>Stacey</h4>
+          Our very own perfectionist. 
+          She'll insure that no hair is left behind. 
+          With over 10 years of experience in colouring and perming, she'll be your best bet for going red, purple or just whatever you like...
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-3">
+      <div class="card h-100">
+        <img src="{{ url_for('static', filename='images/josh.jpeg') }}" class="card-img-top" alt="...">
+        <div class="card-body">
+          <p class="card-text">
+            <h4>Josh</h4>
+          The manager and founder of Hairdresser.org. His journey is quite special, and to hear it you'll just have to book an appointment.
+          Once again, he remains the Jack of all trades and has experience in all hair types and styles.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>    
+
+<footer class="bg-light text-center text-lg-start border-top mt-5">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+
+    <!-- Left side: logo or name -->
+    <div class="mb-3 mb-md-0">
+      <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+      <span class="ms-2 fw-semibold">© 2025 Curly.</span>
+    </div>
+
+    <!-- Right side: social media links -->
+    <div>
+      <a href="https://www.instagram.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
+        <i class="bi bi-instagram fs-4"></i>
+      </a>
+      <a href="https://www.facebook.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
+        <i class="bi bi-facebook fs-4"></i>
+      </a>
+      <a href="https://www.tiktok.com/@yourhandle" target="_blank" class="text-dark">
+        <i class="bi bi-tiktok fs-4"></i>
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+  </body>
+</html>
+

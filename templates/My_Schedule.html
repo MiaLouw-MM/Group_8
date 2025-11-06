@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hairdresser Weekly Calendar</title>
+
+  <!-- Bootstrap CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+
+  <style>
+    .navbar-nav .nav-link:hover {
+        color: blue !important; /* Bootstrap primary blue */
+      } 
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      main {
+        flex: 1;
+      }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: 100px repeat(6, 1fr);
+      border: 1px solid #ddd;
+    }
+    .time-slot, .day-header {
+      border: 1px solid #eee;
+      text-align: center;
+      padding: 5px;
+    }
+    .booking {
+      background-color: #d1e7dd; /* light green */
+      cursor: pointer;
+      border-radius: 4px;
+      padding: 4px;
+      font-size: 0.9rem;
+    }
+    .booking:hover {
+      background-color: #a3cfbb;
+    }
+  </style>
+</head>
+
+<body >
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+          <img src="images/Curly.png" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
+        </a>
+        <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
+          <li class="nav-item">
+            <a class="nav-link" href="hairdresser_homepage.html" aria-current="page" href="#">Hairdresser home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="My_Schedule.html" >Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="Inventory_levels.html">Inventory levels</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="products.html" >Products</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Back to home page</a>
+          </li>
+        </ul>
+       
+      </div>
+    </nav>
+
+  <main class="flex-grow-1">
+  <div class="container py-4">
+    <h2 class="mb-4 text-center">Weekly Calendar</h2>
+
+    <!-- Calendar Grid -->
+    <div class="calendar mb-3">
+      <!-- Header Row -->
+      <div></div> <!-- Empty corner -->
+      <div class="day-header fw-bold">Mon</div>
+      <div class="day-header fw-bold">Tue</div>
+      <div class="day-header fw-bold">Wed</div>
+      <div class="day-header fw-bold">Thu</div>
+      <div class="day-header fw-bold">Fri</div>
+      <div class="day-header fw-bold">Sat</div>
+
+      <!-- Time slots -->
+      <!-- Example: 9AM–5PM -->
+      <script>
+        const times = [
+          "9:00", "10:00", "11:00", "12:00",
+          "13:00", "14:00", "15:00", "16:00", "17:00"
+        ];
+        const calendar = document.currentScript.parentElement;
+
+        times.forEach(time => {
+          const timeCell = document.createElement("div");
+          timeCell.className = "time-slot fw-semibold";
+          timeCell.textContent = time;
+          calendar.appendChild(timeCell);
+
+          for (let i = 0; i < 6; i++) {
+            const cell = document.createElement("div");
+            cell.className = "time-slot";
+            cell.dataset.time = time;
+            cell.dataset.day = i;
+            calendar.appendChild(cell);
+          }
+        });
+      </script>
+    </div>
+
+    <!-- Booking Details Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Booking Details</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>Client:</strong> <span id="clientName"></span></p>
+            <p><strong>Service:</strong> <span id="service"></span></p>
+            <p><strong>Time:</strong> <span id="bookingTime"></span></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Example: some dummy bookings
+    const bookings = [
+      { day: 0, time: "10:00", client: "Alice Johnson", service: "Haircut" },
+      { day: 2, time: "13:00", client: "Bob Smith", service: "Balayage" },
+      { day: 4, time: "15:00", client: "Carol Williams", service: "Highlights" }
+    ];
+
+    // Add them to the grid
+    bookings.forEach(b => {
+      const cell = document.querySelector(`.time-slot[data-day='${b.day}'][data-time='${b.time}']`);
+      if (cell) {
+        const div = document.createElement("div");
+        div.className = "booking";
+        div.textContent = b.client;
+        div.onclick = () => showBooking(b);
+        cell.appendChild(div);
+      }
+    });
+
+    // Function to show booking details
+    const modal = new bootstrap.Modal(document.getElementById("bookingModal"));
+    function showBooking(b) {
+      document.getElementById("clientName").textContent = b.client;
+      document.getElementById("service").textContent = b.service;
+      document.getElementById("bookingTime").textContent = b.time;
+      modal.show();
+    }
+  </script>
+  </main>
+    <footer class="bg-light text-center text-lg-start border-top mt-0">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+
+    <!-- Left side: logo or name -->
+    <div class="mb-3 mb-md-0">
+      <img src="images/Curly.png" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+      <span class="ms-2 fw-semibold">© 2025 Hairdresser org.</span>
+    </div>
+
+    <!-- Right side: social media links -->
+    <div>
+      <a href="https://www.instagram.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
+        <i class="bi bi-instagram fs-4"></i>
+      </a>
+      <a href="https://www.facebook.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
+        <i class="bi bi-facebook fs-4"></i>
+      </a>
+      <a href="https://www.tiktok.com/@yourhandle" target="_blank" class="text-dark">
+        <i class="bi bi-tiktok fs-4"></i>
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+</body>
+</html>
