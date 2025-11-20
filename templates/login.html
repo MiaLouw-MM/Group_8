@@ -63,7 +63,7 @@
   </nav>
 
   <main>
-    <img src="images/Curly.png" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
+    <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
     
     <!-- <h1 class="text-center">Welcome</h1> -->
     
@@ -74,8 +74,8 @@
     <br>
 
     <div class="d-grid gap-2 col-4 mx-auto">
-      <a class="btn btn-info" href="customer_login.html">Customer Login</a>
-      <a class="btn btn-light" href="hairdressor_login.html">Admin Login</a>
+      <a class="btn btn-info" href="{{ url_for('customer_login')}}">Customer Login</a>
+      <a class="btn btn-light" href="{{ url_for('hairdressor_login')}}">Admin Login</a>
     </div>
   </main>
 

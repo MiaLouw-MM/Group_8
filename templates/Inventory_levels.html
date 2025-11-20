@@ -50,17 +50,17 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
           <a class="navbar-brand" href="#">
-          <img src="images/Curly.png" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
+          <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
         </a>
         <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
           <li class="nav-item">
-            <a class="nav-link" href="hairdresser_homepage.html" aria-current="page" href="#">Hairdresser home</a>
+            <a class="nav-link" href="{{ url_for('hairdresser_homepage')}}" aria-current="page" href="#">Hairdresser home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="My_Schedule.html" >Schedule</a>
+            <a class="nav-link" href="{{ url_for('My_Schedule')}}" >Schedule</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" href="Inventory_levels.html">Inventory levels</a>
+            <a class="nav-link active" href="{{ url_for('Inventory_levels')}}">Inventory levels</a>
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
@@ -69,7 +69,7 @@
             <a class="nav-link" href="products.html" >Products</a>
           </li> -->
           <li class="nav-item">
-            <a class="nav-link" href="index.html">Back to home page</a>
+            <a class="nav-link" href="{{ url_for('index')}}">Back to home page</a>
           </li>
         </ul>
        
@@ -211,7 +211,7 @@
 
     <!-- Left side: logo or name -->
     <div class="mb-3 mb-md-0">
-      <img src="images/Curly.png" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+      <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
       <span class="ms-2 fw-semibold">© 2025 Hairdresser org.</span>
     </div>
 

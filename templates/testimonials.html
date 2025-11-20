@@ -32,30 +32,30 @@
             <a class="nav-link active" aria-current="page" href="#">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Services.html" >Services</a>
+            <a class="nav-link" href="{{ url_for('Services')}}" >Services</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="About_Us.html">About Us</a>
+            <a class="nav-link" href="{{ url_for('AboutUs')}}">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Book.html" target="_blank">Schedule a session</a>
+            <a class="nav-link" href="{{ url_for('Book')}}" target="_blank">Schedule a session</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Products.html" target="_blank">Products</a>
+            <a class="nav-link" href="{{ url_for('Products')}}" target="_blank">Products</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="login.html">Login</a>
+            <a class="nav-link" href="{{ url_for('login')}}">Login</a>
           </li>
         </ul>
       </div>
     </nav>
 
 <div>
-  <img src="images/background1.png" class="img-fluid w-100 fade-style" alt="Cannot load image">
+  <img src="{{ url_for('static', filename='images/background1.png') }}" class="img-fluid w-100 fade-style" alt="Cannot load image">
 </div>
 
 <div class="container mt-5 text-center">
-    <img src="images/Curly.png" class="d-inline-block align-text-top" width="340" height="200" alt="Cannot load image">
+    <img src="{{ url_for('static', filename='images/curly.png') }}" class="d-inline-block align-text-top" width="340" height="200" alt="Cannot load image">
     <h1 class="mt-4 mb-3 text-center">Testimonials</h1>
     <hr class="my-4">
 </div>

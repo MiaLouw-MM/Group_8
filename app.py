@@ -63,5 +63,30 @@ def Services():
     }
     return render_template('services.html', services=services, service_images=service_images)
 
+
+@app.route("/customer_login")
+def customer_login():
+    return render_template("customer_login.html")  
+
+@app.route("/hairdressor_login")
+def hairdressor_login():
+    return render_template("hairdressor_login.html")  
+
+@app.route("/hairdresser_homepage")
+def hairdresser_homepage():
+    return render_template("hairdresser_homepage.html")  
+
+@app.route("/Inventory_levels")
+def Inventory_levels():
+    return render_template("Inventory_levels.html")  
+
+@app.route("/My_Schedule")
+def My_Schedule():
+    return render_template("My_Schedule.html")  
+
+@app.route("/testimonials")
+def testimonials():
+    return render_template("testimonials.html")  
+
 if __name__ == "__main__":
     app.run(debug=True)

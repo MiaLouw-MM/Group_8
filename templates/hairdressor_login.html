@@ -63,7 +63,7 @@
   </nav>
 
   <main>
-    <img src="images/Curly.png" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
+    <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
     <h1 class="text-center">Welcome</h1>
     <br>
     
@@ -75,7 +75,7 @@
 <div class="form-floating">
   <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
   <label for="floatingPassword">Password</label><br> 
-  <a class="btn btn-primary" href="hairdresser_homepage.html" target="_blank" role="button">Login</a>
+  <a class="btn btn-primary" href="{{ url_for('hairdresser_homepage')}}" target="_blank" role="button">Login</a>
 </div>
     </div>
   </main>
@@ -83,7 +83,7 @@
   <footer class="bg-light text-center text-lg-start border-top mt-5">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
       <div class="mb-3 mb-md-0">
-        <img src="images/Curly.png" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+        <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
         <span class="ms-2 fw-semibold">© 2025 Curly.</span>
       </div>
 

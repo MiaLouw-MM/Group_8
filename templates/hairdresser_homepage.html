@@ -37,27 +37,27 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
           <a class="navbar-brand" href="#">
-          <img src="images/Curly.png" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
+          <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
         </a>
         <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
           <!-- <li class="nav-item">
             <a class="nav-link" href="index.html" aria-current="page" href="#">Home</a>
           </li> -->
           <li class="nav-item">
-            <a class="nav-link active" href="hairdresser_homepage.html" >Hairdresser home</a>
+            <a class="nav-link active" href="{{ url_for('hairdresser_homepage')}}" >Hairdresser home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="My_Schedule.html" >Schedule</a>
+            <a class="nav-link" href="{{ url_for('My_Schedule')}}" >Schedule</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="Inventory_levels.html">Inventory levels</a>
+            <a class="nav-link" href="{{ url_for('Inventory_levels')}}">Inventory levels</a>
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
           </li> -->
           
           <li class="nav-item">
-            <a class="nav-link" href="index.html">Back to home page</a>
+            <a class="nav-link" href="{{ url_for('index')}}">Back to home page</a>
           </li>
         </ul>
        
@@ -66,7 +66,7 @@
   <main class="flex-grow-1">
   <div class="container mt-4">
       <h1 class="text-center">Welcome Jake</h1>
-      <img src="images/jake.jpeg" width = "300" height = "450" style="display: block; margin: 0 auto;">
+      <img src="{{ url_for('static', filename='images/jake.jpeg') }}" width = "300" height = "450" style="display: block; margin: 0 auto;">
     </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>    
@@ -76,7 +76,7 @@
 
     <!-- Left side: logo or name -->
     <div class="mb-3 mb-md-0">
-      <img src="images/Curly.png" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+      <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
       <span class="ms-2 fw-semibold">© 2025 Hairdresser org.</span>
     </div>
 
