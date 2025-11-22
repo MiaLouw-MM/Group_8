@@ -1,12 +1,15 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
 
 
+
 app = Flask(__name__)
+app.secret_key = 'your_secret_key_here'
 def get_db_connection():
     conn = sqlite3.connect('inventory.db')
     conn.row_factory = sqlite3.Row  
     return conn
+
 
 @app.route("/")
 def index():
@@ -29,7 +32,7 @@ def AboutUs():
     return render_template("AboutUs.html", hairdressor=hairdressor)  
 
 @app.route('/products')
-def Products():
+def products():
     conn = get_db_connection()
     products = conn.execute('SELECT * FROM PRODUCTS').fetchall()
     conn.close()
@@ -68,17 +71,66 @@ def Services():
 def customer_login():
     return render_template("customer_login.html")  
 
-@app.route("/hairdressor_login")
+@app.route("/hairdressor_login", methods=['GET', 'POST'])
 def hairdressor_login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        hairdresser = conn.execute(
+            'SELECT * FROM hairdressor WHERE hairdressor_email = ? AND password = ?',
+            (email, password)
+        ).fetchone()
+        conn.close()
+
+        if hairdresser:
+            # Save hairdresser info in session
+            session['hairdresser_id'] = hairdresser['hairdressor_id']
+            session['hairdresser_name'] = hairdresser['hairdressor_name']
+            session['hairdresser_surname'] = hairdresser['hairdressor_surname']
+            
+            image_name = hairdresser['hairdressor_name'].lower() + ".jpeg"
+            session['hairdresser_image'] = image_name
+            
+            return redirect(url_for('hairdresser_homepage'))
+        else:
+            flash('Invalid email or password')
+            return redirect(url_for('hairdressor_login'))
     return render_template("hairdressor_login.html")  
 
 @app.route("/hairdresser_homepage")
 def hairdresser_homepage():
-    return render_template("hairdresser_homepage.html")  
+    # User is not logged in → send them back to login page
+    if 'hairdresser_id' not in session:
+        return redirect(url_for('hairdressor_login'))
+
+    return render_template(
+        "hairdresser_homepage.html",
+        name=session['hairdresser_name'],
+        surname=session['hairdresser_surname'],
+        image=session['hairdresser_image']
+    )
+ 
 
 @app.route("/Inventory_levels")
 def Inventory_levels():
-    return render_template("Inventory_levels.html")  
+    conn = get_db_connection()
+    products = conn.execute("SELECT * FROM PRODUCTS").fetchall()
+    conn.close()
+
+    # Convert from sqlite rows to list of dictionaries so JS can use them
+    product_list = []
+    for p in products:
+        product_list.append({
+            "id": p["product_id"],
+            "name": p["product_name"],
+            "category": p["product_category"],
+            "stock": p["stock_quantity"],
+            "price": p["price"]
+        })
+
+    return render_template("Inventory_levels.html", products=product_list)
 
 @app.route("/My_Schedule")
 def My_Schedule():

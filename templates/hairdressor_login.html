@@ -37,26 +37,26 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="images/Curly.png" alt="Logo" width="100" height="60" class="d-inline-block align-text-top">
+        <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="100" height="60" class="d-inline-block align-text-top">
       </a>
       <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
         <li class="nav-item">
-          <a class="nav-link" href="index.html" aria-current="page">Home</a>
+          <a class="nav-link" href="{{ url_for('index')}}" aria-current="page">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Services.html">Services</a>
+          <a class="nav-link" href="{{ url_for('Services')}}">Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="AboutUs.html">About Us</a>
+          <a class="nav-link" href="{{ url_for ('AboutUs')}}">About Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Book.html">Schedule a session</a>
+          <a class="nav-link" href="{{ url_for ('Book')}}">Schedule a session</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="products.html">Products</a>
+          <a class="nav-link" href="{{url_for ('products')}}">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="login.html">Login</a>
+          <a class="nav-link active" href="{{ url_for ('login')}}">Login</a>
         </li>
       </ul>
     </div>
@@ -66,8 +66,24 @@
     <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
     <h1 class="text-center">Welcome</h1>
     <br>
-    
+
     <div class="d-grid gap-2 col-4 mx-auto">
+  <form method="POST" action="{{ url_for('hairdressor_login') }}">
+    <div class="form-floating mb-3">
+      <input type="email" name="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <label for="floatingInput">Email address</label>
+    </div>
+    <div class="form-floating mb-3">
+      <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <label for="floatingPassword">Password</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+  </form>
+</div>
+
+
+    
+    <!-- <div class="d-grid gap-2 col-4 mx-auto">
     <div class="form-floating mb-3">
   <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
   <label for="floatingInput">Email address</label>
@@ -77,7 +93,7 @@
   <label for="floatingPassword">Password</label><br> 
   <a class="btn btn-primary" href="{{ url_for('hairdresser_homepage')}}" target="_blank" role="button">Login</a>
 </div>
-    </div>
+    </div> -->
   </main>
 
   <footer class="bg-light text-center text-lg-start border-top mt-5">

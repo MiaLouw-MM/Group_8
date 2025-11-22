@@ -54,8 +54,8 @@
           </li>
           <!-- <li class="nav-item">
             <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
-          </li> -->
-          
+          -->
+
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('index')}}">Back to home page</a>
           </li>
@@ -65,8 +65,10 @@
     </nav>
   <main class="flex-grow-1">
   <div class="container mt-4">
-      <h1 class="text-center">Welcome Jake</h1>
-      <img src="{{ url_for('static', filename='images/jake.jpeg') }}" width = "300" height = "450" style="display: block; margin: 0 auto;">
+      <h1 class="text-center">Welcome {{ session['hairdresser_name'] }}</h1>
+      <img src="{{ url_for('static', filename='images/' + image) }}"
+     width="300" height="450"
+     style="display: block; margin: 0 auto;">
     </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>    

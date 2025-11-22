@@ -108,8 +108,30 @@
             </tr>
           </thead>
           <tbody id="inventoryTable">
-            <!-- Rows will be added by JavaScript -->
-          </tbody>
+  {% for p in products %}
+  <tr class="{% if p.stock|int <= 5 %}low-stock{% elif p.stock|int <= 15 %}medium-stock{% else %}high-stock{% endif %}">
+    <td>{{ loop.index }}</td>
+    <td>{{ p.name }}</td>
+    <td>{{ p.category }}</td>
+    <td>{{ p.stock }}</td>
+    <td>R{{ "%.2f"|format(p.price) }}</td>
+    <td>{{ "Low" if p.stock|int <= 50 else "In Stock" }}</td>
+    <td class="text-center">
+      <button class="btn btn-sm btn-primary" 
+              data-bs-toggle="modal" 
+              data-bs-target="#productModal"
+              data-name="{{ p.name }}"
+              data-category="{{ p.category }}"
+              data-stock="{{ p.stock }}"
+              data-price="{{ "%.2f"|format(p.price) }}"
+              data-status="{{ "Low Stock" if p.stock <= 5 else "Available" }}">
+        View
+      </button>
+    </td>
+  </tr>
+  {% endfor %}
+</tbody>
+
         </table>
       </div>
     </div>
@@ -139,16 +161,43 @@
 
   <script>
     // Dummy inventory data
-    const products = [
-      { id: 1, name: "Shampoo", category: "Hair Care", stock: 25, price: 200 },
-      { id: 2, name: "Conditioner", category: "Hair Care", stock: 5, price: 200 },
-      { id: 3, name: "Hair gel", category: "Styling", stock: 12, price: 100 },
-      { id: 4, name: "Hair serum", category: "Hair Care", stock: 2, price: 200 },
-      { id: 5, name: "Hair brush", category: "Tools", stock: 18, price: 50 },
-      { id: 6, name: "Hair mask", category: "Hair Care", stock: 12, price: 80 }
-    ];
+    // const products = [
+    //   { id: 1, name: "Shampoo", category: "Hair Care", stock: 25, price: 200 },
+    //   { id: 2, name: "Conditioner", category: "Hair Care", stock: 5, price: 200 },
+    //   { id: 3, name: "Hair gel", category: "Styling", stock: 12, price: 100 },
+    //   { id: 4, name: "Hair serum", category: "Hair Care", stock: 2, price: 200 },
+    //   { id: 5, name: "Hair brush", category: "Tools", stock: 18, price: 50 },
+    //   { id: 6, name: "Hair mask", category: "Hair Care", stock: 12, price: 80 }
+    // ];
 
-    const tableBody = document.getElementById("inventoryTable");
+    
+    // Injecting Python list into JavaScript safely  
+     // Modal data population
+      const productModal = document.getElementById('productModal');
+      productModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        document.getElementById('modalProductName').textContent = button.getAttribute('data-name');
+        document.getElementById('modalCategory').textContent = button.getAttribute('data-category');
+        document.getElementById('modalStock').textContent = button.getAttribute('data-stock');
+        document.getElementById('modalPrice').textContent = button.getAttribute('data-price');
+        document.getElementById('modalStatus').textContent = button.getAttribute('data-status');
+      });
+
+      // Search feature
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      searchBtn.addEventListener('click', () => {
+        const filter = searchInput.value.toLowerCase();
+        document.querySelectorAll('#inventoryTable tr').forEach(row => {
+          row.style.display = row.children[1].textContent.toLowerCase().includes(filter) ? '' : 'none';
+        });
+      });
+      searchInput.addEventListener('input', () => searchBtn.click());
+    
+    </script>
+
+
+    <!-- const tableBody = document.getElementById("inventoryTable");
 
     // Function to set row color based on stock
     function getStockClass(stock) {
@@ -203,7 +252,7 @@
 
     // Initial render
     renderTable();
-  </script>
+  </script> -->
 
 
     <footer class="bg-light text-center text-lg-start border-top mt-5">
