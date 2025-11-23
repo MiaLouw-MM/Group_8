@@ -86,13 +86,12 @@
       <div class="container py-4">
     <!-- <h2 class="mb-4 text-center">💇‍♀️ Salon Inventory Management</h2> -->
 
-    <!-- Search bar -->
+   
     <div class="input-group mb-3">
       <input type="text" id="searchInput" class="form-control" placeholder="Search product...">
       <button class="btn btn-outline-secondary" type="button" id="searchBtn">Search</button>
     </div>
 
-    <!-- Inventory Table -->
     <div class="card shadow-sm">
       <div class="card-body p-0">
         <table class="table table-hover mb-0">
@@ -128,6 +127,20 @@
         View
       </button>
     </td>
+    <td class="text-center">
+    <button class="btn btn-sm btn-warning"
+        data-bs-toggle="modal"
+        data-bs-target="#editProductModal"
+        data-id="{{ p.id }}"
+        data-name="{{ p.name }}"
+        data-category="{{ p.category }}"
+        data-stock="{{ p.stock }}"
+        data-price="{{ "%.2f"|format(p.price) }}">
+        Edit
+    </button>
+    </td>
+
+
   </tr>
   {% endfor %}
 </tbody>
@@ -136,6 +149,40 @@
       </div>
     </div>
   </div>
+  <div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form method="POST" action="{{ url_for('update_product') }}">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Edit Product</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="product_id" id="editProductId">
+          <div class="mb-3">
+            <label class="form-label">Product Name</label>
+            <input type="text" class="form-control" name="product_name" id="editProductName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Category</label>
+            <input type="text" class="form-control" name="product_category" id="editProductCategory" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Stock Quantity</label>
+            <input type="number" class="form-control" name="stock_quantity" id="editProductStock" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Price (R)</label>
+            <input type="number" step="0.01" class="form-control" name="price" id="editProductPrice" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Update Product</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
   <!-- Product Detail Modal -->
   <div class="modal fade" id="productModal" tabindex="-1" aria-hidden="true">
@@ -156,23 +203,11 @@
     </div>
   </div>
 
-  <!-- Bootstrap JS -->
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-    // Dummy inventory data
-    // const products = [
-    //   { id: 1, name: "Shampoo", category: "Hair Care", stock: 25, price: 200 },
-    //   { id: 2, name: "Conditioner", category: "Hair Care", stock: 5, price: 200 },
-    //   { id: 3, name: "Hair gel", category: "Styling", stock: 12, price: 100 },
-    //   { id: 4, name: "Hair serum", category: "Hair Care", stock: 2, price: 200 },
-    //   { id: 5, name: "Hair brush", category: "Tools", stock: 18, price: 50 },
-    //   { id: 6, name: "Hair mask", category: "Hair Care", stock: 12, price: 80 }
-    // ];
 
-    
-    // Injecting Python list into JavaScript safely  
-     // Modal data population
       const productModal = document.getElementById('productModal');
       productModal.addEventListener('show.bs.modal', function (event) {
         const button = event.relatedTarget;
@@ -258,13 +293,13 @@
     <footer class="bg-light text-center text-lg-start border-top mt-5">
   <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
 
-    <!-- Left side: logo or name -->
+    
     <div class="mb-3 mb-md-0">
       <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
       <span class="ms-2 fw-semibold">© 2025 Hairdresser org.</span>
     </div>
 
-    <!-- Right side: social media links -->
+    
     <div>
       <a href="https://www.instagram.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
         <i class="bi bi-instagram fs-4"></i>
@@ -279,8 +314,20 @@
 
   </div>
 </footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const editModal = document.getElementById('editProductModal');
+editModal.addEventListener('show.bs.modal', function (event) {
+    const button = event.relatedTarget;
 
+    document.getElementById('editProductId').value = button.getAttribute('data-id');
+    document.getElementById('editProductName').value = button.getAttribute('data-name');
+    document.getElementById('editProductCategory').value = button.getAttribute('data-category');
+    document.getElementById('editProductStock').value = button.getAttribute('data-stock');
+    document.getElementById('editProductPrice').value = button.getAttribute('data-price');
+});
+</script>
   </body>
-
+  
 
 </html>

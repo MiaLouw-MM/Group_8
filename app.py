@@ -129,7 +129,7 @@ def AboutUs():
     conn.close()
     return render_template("AboutUs.html", hairdressor=hairdressor)  
 
-@app.route('/products')
+@app.route('/products', methods=['GET', 'POST'])
 def products():
     conn = get_db_connection()
     products = conn.execute('SELECT * FROM PRODUCTS').fetchall()
@@ -327,12 +327,33 @@ def My_Schedule():
 
 @app.route("/testimonials")
 def testimonials():
-    return render_template("testimonials.html")  
+    return render_template("testimonials.html") 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/update_product', methods=['POST'])
+def update_product():
+    product_id = request.form.get('product_id')
+    product_name = request.form.get('product_name')
+    product_category = request.form.get('product_category')
+    stock_quantity = request.form.get('stock_quantity')
+    price = request.form.get('price')
+
+    conn = get_db_connection()
+    conn.execute(
+        'UPDATE PRODUCTS SET product_name=?, product_category=?, stock_quantity=?, price=? WHERE product_id=?',
+        (product_name, product_category, int(stock_quantity), float(price), product_id)
+    )
+    conn.commit()
+    conn.close()
+    return redirect(url_for('Inventory_levels')) 
 
 @app.route('/Customer_Schedule')
 def Customer_Schedule():
     return render_template("Customer_Schedule.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+
+
+
 
