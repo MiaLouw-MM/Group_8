@@ -67,7 +67,7 @@ def Services():
     return render_template('services.html', services=services, service_images=service_images)
 
 
-@app.route("/customer_login")
+@app.route("/customer_login", methods=['GET', 'POST'])
 def customer_login():
     if request.method == 'POST':
         email = request.form['email']
@@ -89,11 +89,25 @@ def customer_login():
             image_name = customer['customer_name'].lower() + ".jpeg"
             session['customer_image'] = image_name
             
-            return redirect(url_for('cutomer_homepage'))
+            return redirect(url_for('customer_homepage'))
         else:
             flash('Invalid email or password')
             return redirect(url_for('customer_login'))
     return render_template("customer_login.html")  
+
+@app.route("/customer_homepage")
+def customer_homepage():
+    # User is not logged in → send them back to login page
+    if 'customer_id' not in session:
+        return redirect(url_for('customer_login'))
+
+    return render_template(
+    "customer_homepage.html",
+    name=session['customer_name'],
+    surname=session['customer_surname'],
+    image=session['customer_image']
+)
+
 
 @app.route("/hairdressor_login", methods=['GET', 'POST'])
 def hairdressor_login():
@@ -166,3 +180,7 @@ def testimonials():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+@app.route('/Customer_Schedule')
+def Customer_Schedule():
+    return render_template("Customer_Schedule.html")
