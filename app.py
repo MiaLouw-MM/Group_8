@@ -71,23 +71,23 @@ def Book():
         total_min = hh*60 + mm
         if total_min < 8*60 or total_min > 17*60:
             conn.close()
-            flash("Time outside business hours", "danger")
+            flash("Unavailable during non-business hours", "danger")
             return redirect(url_for('Book'))
         if (total_min % 5) != 0:
             conn.close()
-            flash("Time must be on a 5-minute interval", "danger")
+            flash("Please select a different time", "danger")
             return redirect(url_for('Book'))
 
         
         if total_min + duration_min > 17*60:
             conn.close()
-            flash("Service does not fit into business hours for that start time", "danger")
+            flash("Service not available during non-business hours", "danger")
             return redirect(url_for('Book'))
 
         
         if not is_slot_available(conn, stylist_id, start_dt, duration_min):
             conn.close()
-            flash("Selected slot conflicts with an existing booking", "danger")
+            flash("Session unavailable", "danger")
             return redirect(url_for('Book'))
 
        
@@ -256,7 +256,7 @@ def Inventory_levels():
 
 @app.route("/My_Schedule")
 def My_Schedule():
-    stylist_id = request.args.get('stylist_id')  # string or None
+    stylist_id = request.args.get('stylist_id') 
     conn = get_db_connection()
 
 
