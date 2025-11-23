@@ -11,7 +11,7 @@ def get_db_connection():
     conn.row_factory = sqlite3.Row
     return conn
 
-# helper: generate 5-min slots between business open and latest start (minutes)
+
 def generate_slots_for_date(duration_min, date_str):
     OPEN_MIN = 8*60
     CLOSE_MIN = 17*60
@@ -25,9 +25,9 @@ def generate_slots_for_date(duration_min, date_str):
         t += 5
     return slots
 
-# helper: check overlap for stylist on date
+
 def is_slot_available(conn, stylist_id, start_dt_str, duration_min):
-    # start_dt_str format: "YYYY-MM-DD HH:MM:SS"
+    
     end_dt_str = (datetime.datetime.strptime(start_dt_str, "%Y-%m-%d %H:%M:%S")
                   + datetime.timedelta(minutes=int(duration_min))).strftime("%Y-%m-%d %H:%M:%S")
     q = """
@@ -36,7 +36,7 @@ def is_slot_available(conn, stylist_id, start_dt_str, duration_min):
         AND NOT (end_datetime <= ? OR start_datetime >= ?)
       LIMIT 1
     """
-    # compare on the same day range
+    
     cur = conn.execute(q, (stylist_id, start_dt_str, end_dt_str)).fetchone()
     return cur is None
 
@@ -48,18 +48,16 @@ def index():
 def Book():
     conn = get_db_connection()
     services = conn.execute("SELECT service_id, service_name, service_duration_min FROM services").fetchall()
-    # you need a stylists table or map; adapt the query to your schema
     stylists = conn.execute("SELECT hairdressor_id AS id, hairdressor_name || ' ' || hairdressor_surname AS name FROM hairdressor").fetchall()
 
     if request.method == 'POST':
-        # final booking submission
         service_id = request.form.get('service_id')
         stylist_id = request.form.get('stylist_id')
         date = request.form.get('date')                 # YYYY-MM-DD
         time = request.form.get('booking_time')         # HH:MM
         customer_email = request.form.get('customer_email') or None
 
-        # compute start and end datetimes
+       
         start_dt = f"{date} {time}:00"
         duration_row = conn.execute("SELECT service_duration_min FROM services WHERE service_id = ?", (service_id,)).fetchone()
         if not duration_row:
@@ -68,31 +66,31 @@ def Book():
             return redirect(url_for('Book'))
         duration_min = int(duration_row["service_duration_min"])
 
-        # validate 5-minute grid and business hours server-side
+        
         hh, mm = map(int, time.split(':'))
         total_min = hh*60 + mm
         if total_min < 8*60 or total_min > 17*60:
             conn.close()
-            flash("Time outside business hours", "danger")
+            flash("Unavailable during non-business hours", "danger")
             return redirect(url_for('Book'))
         if (total_min % 5) != 0:
             conn.close()
-            flash("Time must be on a 5-minute interval", "danger")
+            flash("Please select a different time", "danger")
             return redirect(url_for('Book'))
 
-        # check latest allowed start
+        
         if total_min + duration_min > 17*60:
             conn.close()
-            flash("Service does not fit into business hours for that start time", "danger")
+            flash("Service not available during non-business hours", "danger")
             return redirect(url_for('Book'))
 
-        # check overlap
+        
         if not is_slot_available(conn, stylist_id, start_dt, duration_min):
             conn.close()
-            flash("Selected slot conflicts with an existing booking", "danger")
+            flash("Session unavailable", "danger")
             return redirect(url_for('Book'))
 
-        # insert booking
+       
         new_id = conn.execute(
             "INSERT INTO bookings (customer_email, service_id, stylist_id, start_datetime, duration_min) VALUES (?, ?, ?, ?, ?)",
             (customer_email, service_id, stylist_id, start_dt, duration_min)
@@ -100,9 +98,8 @@ def Book():
         conn.commit()
         conn.close()
         flash("Booking created", "success")
-        return redirect(url_for('My_Schedule', stylist_id=stylist_id))
-
-    # GET: optionally compute available slots if service_id + date + stylist_id query params provided
+        return redirect(url_for('Book', stylist_id=stylist_id))
+    
     selected_service = request.args.get('service_id')
     selected_date = request.args.get('date')
     selected_stylist = request.args.get('stylist_id')
@@ -113,7 +110,6 @@ def Book():
         if row:
             duration_min = int(row["service_duration_min"])
             candidate_slots = generate_slots_for_date(duration_min, selected_date)
-            # filter out slots that overlap existing bookings for that stylist on that date
             slots = []
             for t in candidate_slots:
                 start_dt = f"{selected_date} {t}:00"
@@ -187,7 +183,6 @@ def customer_login():
         conn.close()
 
         if customer:
-            # Save customer info in session
             session['customer_id'] = customer['customer_id']
             session['customer_name'] = customer['customer_name']
             session['customer_surname'] = customer['customer_surname']
@@ -229,7 +224,6 @@ def hairdressor_login():
         conn.close()
 
         if hairdresser:
-            # Save hairdresser info in session
             session['hairdresser_id'] = hairdresser['hairdressor_id']
             session['hairdresser_name'] = hairdresser['hairdressor_name']
             session['hairdresser_surname'] = hairdresser['hairdressor_surname']
@@ -245,7 +239,6 @@ def hairdressor_login():
 
 @app.route("/hairdresser_homepage")
 def hairdresser_homepage():
-    # User is not logged in → send them back to login page
     if 'hairdresser_id' not in session:
         return redirect(url_for('hairdressor_login'))
 
@@ -263,7 +256,6 @@ def Inventory_levels():
     products = conn.execute("SELECT * FROM PRODUCTS").fetchall()
     conn.close()
 
-    # Convert from sqlite rows to list of dictionaries so JS can use them
     product_list = []
     for p in products:
         product_list.append({
@@ -278,34 +270,51 @@ def Inventory_levels():
 
 @app.route("/My_Schedule")
 def My_Schedule():
-    stylist_id = request.args.get('stylist_id')  # optional
+    stylist_id = request.args.get('stylist_id') 
     conn = get_db_connection()
+
+
+    stylists = conn.execute(
+        "SELECT hairdressor_id AS id, hairdressor_name || ' ' || hairdressor_surname AS name FROM hairdressor"
+    ).fetchall()
+
+
     q = """
       SELECT b.id, b.start_datetime, b.duration_min, b.end_datetime,
              s.service_name, h.hairdressor_name || ' ' || h.hairdressor_surname AS stylist_name,
-             b.customer_email
+             b.customer_email, b.stylist_id
       FROM bookings b
       LEFT JOIN services s ON b.service_id = s.service_id
       LEFT JOIN hairdressor h ON b.stylist_id = h.hairdressor_id
-      WHERE 1=1
     """
     params = []
     if stylist_id:
-        q += " AND b.stylist_id = ?"
+        q += " WHERE b.stylist_id = ?"
         params.append(stylist_id)
-    # execute the properly built query with params
+    q += " ORDER BY b.start_datetime"
+
     rows = conn.execute(q, params).fetchall()
+
+
     bookings = []
+    import datetime
     for r in rows:
-        dt = datetime.datetime.strptime(r['start_datetime'], "%Y-%m-%d %H:%M:%S")
+        try:
+            dt = datetime.datetime.strptime(r['start_datetime'], "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            dt = datetime.datetime.strptime(r['start_datetime'][:16], "%Y-%m-%d %H:%M")
         bookings.append({
+            "id": r["id"],
             "day": dt.weekday(),
             "time": dt.strftime("%H:%M"),
-            "client": r['customer_email'] or '',
-            "service": r['service_name'] or ''
+            "client": r["customer_email"] or '',
+            "service": r["service_name"] or '',
+            "stylist": r["stylist_name"] or '',
+            "stylist_id": r["stylist_id"]
         })
+
     conn.close()
-    return render_template("My_Schedule.html", bookings=bookings or [])
+    return render_template("My_Schedule.html", bookings=bookings, stylists=stylists, selected_stylist=stylist_id)
 
 @app.route("/testimonials")
 def testimonials():
