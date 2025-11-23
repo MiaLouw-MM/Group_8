@@ -151,21 +151,36 @@ CREATE TABLE Bookings (
 );
 
 
-INSERT INTO Bookings (service_id, hairdressor_id, customer_id, booking_date, status)
-VALUES
-(1, 1, 1, '2025-10-28 10:00:00', 'scheduled'),
-(2, 2, 2, '2025-10-28 11:30:00', 'scheduled'),
-(3, 1, 3, '2025-10-29 09:00:00', 'completed'),
-(1, 3, 4, '2025-10-29 14:00:00', 'canceled'),
-(2, 2, 5, '2025-10-30 12:00:00', 'scheduled'),
-(3, 1, 6, '2025-10-30 15:30:00', 'scheduled'),
-(1, 3, 7, '2025-10-31 10:00:00', 'completed'),
-(2, 2, 8, '2025-10-31 11:00:00', 'scheduled'),
-(3, 1, 9, '2025-11-01 09:30:00', 'scheduled'),
-(1, 3, 10, '2025-11-01 13:00:00', 'scheduled');
 
 
 
+
+DELETE FROM Bookings;
+DROP TABLE Bookings;
+
+PRAGMA foreign_keys=ON;
+
+CREATE TABLE IF NOT EXISTS bookings (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  customer_email TEXT,
+  service_id INTEGER NOT NULL,
+  stylist_id INTEGER NOT NULL,
+  start_datetime TEXT NOT NULL,    -- "YYYY-MM-DD HH:MM:SS"
+  duration_min INTEGER NOT NULL,
+  end_datetime TEXT,               -- computed
+  status TEXT DEFAULT 'confirmed',
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY(service_id) REFERENCES services(service_id)
+);
+
+CREATE TRIGGER IF NOT EXISTS trg_bookings_after_insert
+AFTER INSERT ON bookings
+FOR EACH ROW
+BEGIN
+  UPDATE bookings
+  SET end_datetime = datetime(NEW.start_datetime, '+' || NEW.duration_min || ' minutes')
+  WHERE id = NEW.id;
+END;
 
 
 
