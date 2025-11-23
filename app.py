@@ -264,34 +264,52 @@ def Inventory_levels():
 
 @app.route("/My_Schedule")
 def My_Schedule():
-    stylist_id = request.args.get('stylist_id')  # optional
+    stylist_id = request.args.get('stylist_id')  # string or None
     conn = get_db_connection()
+
+    # load stylists for the selector
+    stylists = conn.execute(
+        "SELECT hairdressor_id AS id, hairdressor_name || ' ' || hairdressor_surname AS name FROM hairdressor"
+    ).fetchall()
+
+    # build query and params (only filter when stylist_id is provided and non-empty)
     q = """
       SELECT b.id, b.start_datetime, b.duration_min, b.end_datetime,
              s.service_name, h.hairdressor_name || ' ' || h.hairdressor_surname AS stylist_name,
-             b.customer_email
+             b.customer_email, b.stylist_id
       FROM bookings b
       LEFT JOIN services s ON b.service_id = s.service_id
       LEFT JOIN hairdressor h ON b.stylist_id = h.hairdressor_id
-      WHERE 1=1
     """
     params = []
     if stylist_id:
-        q += " AND b.stylist_id = ?"
+        q += " WHERE b.stylist_id = ?"
         params.append(stylist_id)
-    # execute the properly built query with params
+    q += " ORDER BY b.start_datetime"
+
     rows = conn.execute(q, params).fetchall()
+
+    # convert rows to plain dicts
     bookings = []
+    import datetime
     for r in rows:
-        dt = datetime.datetime.strptime(r['start_datetime'], "%Y-%m-%d %H:%M:%S")
+        try:
+            dt = datetime.datetime.strptime(r['start_datetime'], "%Y-%m-%d %H:%M:%S")
+        except Exception:
+            dt = datetime.datetime.strptime(r['start_datetime'][:16], "%Y-%m-%d %H:%M")
         bookings.append({
+            "id": r["id"],
             "day": dt.weekday(),
             "time": dt.strftime("%H:%M"),
-            "client": r['customer_email'] or '',
-            "service": r['service_name'] or ''
+            "client": r["customer_email"] or '',
+            "service": r["service_name"] or '',
+            "stylist": r["stylist_name"] or '',
+            "stylist_id": r["stylist_id"]
         })
+
     conn.close()
-    return render_template("My_Schedule.html", bookings=bookings or [])
+    # pass stylists and the selected id to template
+    return render_template("My_Schedule.html", bookings=bookings, stylists=stylists, selected_stylist=stylist_id)
 
 @app.route("/testimonials")
 def testimonials():
