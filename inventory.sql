@@ -169,22 +169,22 @@ BEGIN
 END;*/
 SELECT * FROM customer;
 --ALTER TABLE customer
---ADD COLUMN password TEXT DEFAULT 'N/A';
+--ADD COLUMN customer_image VARCHAR(100);
 
 /*UPDATE customer
-SET password = 'password1'
+SET customer_image = 'Alice.jpeg'
 WHERE name = 'Alice' AND surname = 'Johnson';
 
 UPDATE customer
-SET password = 'password2'
+SET customer_image = 'Bob.jpeg'
 WHERE name = 'Bob' AND surname = 'Smith';
 
 UPDATE customer
-SET password = 'password3'
-WHERE name = 'Carol' AND surname = 'Williams';
+SET customer_image = 'Carol.jpeg'
+WHERE name = 'Carol' AND surname = 'Williams';*/
 
-UPDATE customer
-SET password = 'password4'
+/*UPDATE customer
+SET customer_id = '4'
 WHERE name = 'David' AND surname = 'Brown';*/
 
 

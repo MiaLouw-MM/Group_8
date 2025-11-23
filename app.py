@@ -4,6 +4,8 @@ import datetime
 
 
 
+
+
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 def get_db_connection():
@@ -176,18 +178,20 @@ def customer_login():
         password = request.form['password']
 
         conn = get_db_connection()
+
         customer = conn.execute(
-            'SELECT * FROM customer WHERE customer_email = ? AND password = ?',
+            "SELECT * FROM customer WHERE email=? AND password=?",
             (email, password)
         ).fetchone()
+
         conn.close()
 
         if customer:
             session['customer_id'] = customer['customer_id']
-            session['customer_name'] = customer['customer_name']
-            session['customer_surname'] = customer['customer_surname']
+            session['customer_name'] = customer['name']
+            session['customer_surname'] = customer['surname']
             
-            image_name = customer['customer_name'].lower() + ".jpeg"
+            image_name = customer['name'].lower() + ".jpeg"
             session['customer_image'] = image_name
             
             return redirect(url_for('customer_homepage'))
@@ -206,7 +210,7 @@ def customer_homepage():
     "customer_homepage.html",
     name=session['customer_name'],
     surname=session['customer_surname'],
-    image=session['customer_image']
+    customer_image=session['customer_image']
 )
 
 
@@ -320,9 +324,10 @@ def My_Schedule():
 def testimonials():
     return render_template("testimonials.html")  
 
-if __name__ == "__main__":
-    app.run(debug=True)
-
 @app.route('/Customer_Schedule')
 def Customer_Schedule():
     return render_template("Customer_Schedule.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
