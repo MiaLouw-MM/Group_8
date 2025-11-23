@@ -1,23 +1,128 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
+import datetime
 
 
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'
 def get_db_connection():
-    conn = sqlite3.connect('inventory.db')
-    conn.row_factory = sqlite3.Row  
+    conn = sqlite3.connect('inventory.db', detect_types=sqlite3.PARSE_DECLTYPES)
+    conn.row_factory = sqlite3.Row
     return conn
 
+# helper: generate 5-min slots between business open and latest start (minutes)
+def generate_slots_for_date(duration_min, date_str):
+    OPEN_MIN = 8*60
+    CLOSE_MIN = 17*60
+    latest_start = CLOSE_MIN - int(duration_min)
+    slots = []
+    t = OPEN_MIN
+    while t <= latest_start:
+        hh = t // 60
+        mm = t % 60
+        slots.append(f"{hh:02d}:{mm:02d}")
+        t += 5
+    return slots
+
+# helper: check overlap for stylist on date
+def is_slot_available(conn, stylist_id, start_dt_str, duration_min):
+    # start_dt_str format: "YYYY-MM-DD HH:MM:SS"
+    end_dt_str = (datetime.datetime.strptime(start_dt_str, "%Y-%m-%d %H:%M:%S")
+                  + datetime.timedelta(minutes=int(duration_min))).strftime("%Y-%m-%d %H:%M:%S")
+    q = """
+      SELECT 1 FROM bookings
+      WHERE stylist_id = ?
+        AND NOT (end_datetime <= ? OR start_datetime >= ?)
+      LIMIT 1
+    """
+    # compare on the same day range
+    cur = conn.execute(q, (stylist_id, start_dt_str, end_dt_str)).fetchone()
+    return cur is None
 
 @app.route("/")
 def index():
     return render_template("index.html")  
 
-@app.route("/Book")
+@app.route("/Book", methods=['GET', 'POST'])
 def Book():
-    return render_template("Book.html")  
+    conn = get_db_connection()
+    services = conn.execute("SELECT service_id, service_name, service_duration_min FROM services").fetchall()
+    # you need a stylists table or map; adapt the query to your schema
+    stylists = conn.execute("SELECT hairdressor_id AS id, hairdressor_name || ' ' || hairdressor_surname AS name FROM hairdressor").fetchall()
+
+    if request.method == 'POST':
+        # final booking submission
+        service_id = request.form.get('service_id')
+        stylist_id = request.form.get('stylist_id')
+        date = request.form.get('date')                 # YYYY-MM-DD
+        time = request.form.get('booking_time')         # HH:MM
+        customer_email = request.form.get('customer_email') or None
+
+        # compute start and end datetimes
+        start_dt = f"{date} {time}:00"
+        duration_row = conn.execute("SELECT service_duration_min FROM services WHERE service_id = ?", (service_id,)).fetchone()
+        if not duration_row:
+            conn.close()
+            flash("Selected service not found", "danger")
+            return redirect(url_for('Book'))
+        duration_min = int(duration_row["service_duration_min"])
+
+        # validate 5-minute grid and business hours server-side
+        hh, mm = map(int, time.split(':'))
+        total_min = hh*60 + mm
+        if total_min < 8*60 or total_min > 17*60:
+            conn.close()
+            flash("Time outside business hours", "danger")
+            return redirect(url_for('Book'))
+        if (total_min % 5) != 0:
+            conn.close()
+            flash("Time must be on a 5-minute interval", "danger")
+            return redirect(url_for('Book'))
+
+        # check latest allowed start
+        if total_min + duration_min > 17*60:
+            conn.close()
+            flash("Service does not fit into business hours for that start time", "danger")
+            return redirect(url_for('Book'))
+
+        # check overlap
+        if not is_slot_available(conn, stylist_id, start_dt, duration_min):
+            conn.close()
+            flash("Selected slot conflicts with an existing booking", "danger")
+            return redirect(url_for('Book'))
+
+        # insert booking
+        new_id = conn.execute(
+            "INSERT INTO bookings (customer_email, service_id, stylist_id, start_datetime, duration_min) VALUES (?, ?, ?, ?, ?)",
+            (customer_email, service_id, stylist_id, start_dt, duration_min)
+        ).lastrowid
+        conn.commit()
+        conn.close()
+        flash("Booking created", "success")
+        return redirect(url_for('My_Schedule', stylist_id=stylist_id))
+
+    # GET: optionally compute available slots if service_id + date + stylist_id query params provided
+    selected_service = request.args.get('service_id')
+    selected_date = request.args.get('date')
+    selected_stylist = request.args.get('stylist_id')
+
+    slots = []
+    if selected_service and selected_date and selected_stylist:
+        row = conn.execute("SELECT service_duration_min FROM services WHERE service_id = ?", (selected_service,)).fetchone()
+        if row:
+            duration_min = int(row["service_duration_min"])
+            candidate_slots = generate_slots_for_date(duration_min, selected_date)
+            # filter out slots that overlap existing bookings for that stylist on that date
+            slots = []
+            for t in candidate_slots:
+                start_dt = f"{selected_date} {t}:00"
+                if is_slot_available(conn, selected_stylist, start_dt, duration_min):
+                    slots.append(t)
+    conn.close()
+    return render_template("Book.html", services=services, stylists=stylists,
+                           slots=slots, selected_service=selected_service,
+                           selected_date=selected_date, selected_stylist=selected_stylist)
 
 @app.route("/login")
 def login():
@@ -54,9 +159,9 @@ def Services():
     conn.close()
 
     service_images = {
-        'WomanTrim': "Womans' Trim.jpg",
-        'WomanCut': "Womans' Cut.jpg",
-        'MenCut': "Mens' cut.webp",
+        'WomanTrim': "Womans Trim.jpg",
+        'WomanCut': "Womans Cut.jpg",
+        'MenCut': "Mens cut.webp",
         'Balayage': 'Balayage.jpg',
         'Highlights': 'Highlights.jpg',
         'Semi-permanent colour': 'Semi-permanent colour.webp',
@@ -64,6 +169,7 @@ def Services():
         'Lowlights': 'Lowlights.jpg',
         'Permanent colour': 'permanent colour.jpg'
     }
+    
     return render_template('services.html', services=services, service_images=service_images)
 
 
@@ -172,7 +278,34 @@ def Inventory_levels():
 
 @app.route("/My_Schedule")
 def My_Schedule():
-    return render_template("My_Schedule.html")  
+    stylist_id = request.args.get('stylist_id')  # optional
+    conn = get_db_connection()
+    q = """
+      SELECT b.id, b.start_datetime, b.duration_min, b.end_datetime,
+             s.service_name, h.hairdressor_name || ' ' || h.hairdressor_surname AS stylist_name,
+             b.customer_email
+      FROM bookings b
+      LEFT JOIN services s ON b.service_id = s.service_id
+      LEFT JOIN hairdressor h ON b.stylist_id = h.hairdressor_id
+      WHERE 1=1
+    """
+    params = []
+    if stylist_id:
+        q += " AND b.stylist_id = ?"
+        params.append(stylist_id)
+    # execute the properly built query with params
+    rows = conn.execute(q, params).fetchall()
+    bookings = []
+    for r in rows:
+        dt = datetime.datetime.strptime(r['start_datetime'], "%Y-%m-%d %H:%M:%S")
+        bookings.append({
+            "day": dt.weekday(),
+            "time": dt.strftime("%H:%M"),
+            "client": r['customer_email'] or '',
+            "service": r['service_name'] or ''
+        })
+    conn.close()
+    return render_template("My_Schedule.html", bookings=bookings or [])
 
 @app.route("/testimonials")
 def testimonials():
