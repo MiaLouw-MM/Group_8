@@ -54,15 +54,17 @@ def Book():
         stylist_id = request.form.get('stylist_id')
         date = request.form.get('date')                
         time = request.form.get('booking_time')         
-        customer_email = request.form.get('customer_email') or None
+        customer_email = request.form.get('customer_email') 
 
         start_dt = f"{date} {time}:00"
         duration_row = conn.execute("SELECT service_duration_min FROM services WHERE service_id = ?", (service_id,)).fetchone()
+        duration_min = int(duration_row["service_duration_min"])
+        
         if not duration_row:
             conn.close()
-            #flash("Selected service not found", "danger")
+            flash("Selected service not found", "danger")
             return redirect(url_for('Book'))
-        duration_min = int(duration_row["service_duration_min"])
+        
 
         hh, mm = map(int, time.split(':'))
         total_min = hh*60 + mm
@@ -75,6 +77,12 @@ def Book():
             conn.close()
             flash("Service not available during non-business hours", "danger")
             return redirect(url_for('Book'))
+        
+        if not is_slot_available(conn, stylist_id, start_dt, duration_min):
+            conn.close()
+            flash("Stylist already booked in that time slot", "danger")
+            return redirect(url_for('Book', stylist_id=stylist_id))
+
 
         new_id = conn.execute(
             "INSERT INTO bookings (customer_email, service_id, stylist_id, start_datetime, duration_min) VALUES (?, ?, ?, ?, ?)",
