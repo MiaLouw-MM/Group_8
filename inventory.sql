@@ -167,8 +167,25 @@ BEGIN
   SET end_datetime = datetime(NEW.start_datetime, '+' || NEW.duration_min || ' minutes')
   WHERE id = NEW.id;
 END;*/
---SELECT * FROM products
+SELECT * FROM customer;
+--ALTER TABLE customer
+--ADD COLUMN password TEXT DEFAULT 'N/A';
 
+/*UPDATE customer
+SET password = 'password1'
+WHERE name = 'Alice' AND surname = 'Johnson';
+
+UPDATE customer
+SET password = 'password2'
+WHERE name = 'Bob' AND surname = 'Smith';
+
+UPDATE customer
+SET password = 'password3'
+WHERE name = 'Carol' AND surname = 'Williams';
+
+UPDATE customer
+SET password = 'password4'
+WHERE name = 'David' AND surname = 'Brown';*/
 
 
 
