@@ -100,7 +100,7 @@ def Book():
         conn.commit()
         conn.close()
         flash("Booking created", "success")
-        return redirect(url_for('My_Schedule', stylist_id=stylist_id))
+        return redirect(url_for('Book', stylist_id=stylist_id))
 
     # GET: optionally compute available slots if service_id + date + stylist_id query params provided
     selected_service = request.args.get('service_id')

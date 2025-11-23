@@ -138,25 +138,9 @@ VALUES
 ('Stacey', 'Green', '0796666666', "staceygreen@hairdressor.com", 'password3'),
 ('Josh', 'King', '0795555555', "joshB@hairdressor.com", 'password4');
 
-CREATE TABLE Bookings (
-    booking_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    service_id INTEGER NOT NULL,
-    hairdressor_id INTEGER NOT NULL,
-    customer_id INTEGER NOT NULL,
-    booking_date DATETIME NOT NULL,
-    status VARCHAR(20) DEFAULT 'scheduled',
-    FOREIGN KEY (service_id) REFERENCES services(service_id),
-    FOREIGN KEY (hairdressor_id) REFERENCES hairdressor(hairdressor_id),
-    FOREIGN KEY (customer_id) REFERENCES customer(customer_id)
-);
-
-
-
-
-
 
 DELETE FROM Bookings;
-DROP TABLE Bookings;
+
 
 PRAGMA foreign_keys=ON;
 
@@ -181,6 +165,7 @@ BEGIN
   SET end_datetime = datetime(NEW.start_datetime, '+' || NEW.duration_min || ' minutes')
   WHERE id = NEW.id;
 END;
+
 
 
 
