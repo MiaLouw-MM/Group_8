@@ -27,7 +27,6 @@ def generate_slots_for_date(duration_min, date_str):
 
 
 def is_slot_available(conn, stylist_id, start_dt_str, duration_min):
-    
     end_dt_str = (datetime.datetime.strptime(start_dt_str, "%Y-%m-%d %H:%M:%S")
                   + datetime.timedelta(minutes=int(duration_min))).strftime("%Y-%m-%d %H:%M:%S")
     q = """
@@ -53,44 +52,30 @@ def Book():
     if request.method == 'POST':
         service_id = request.form.get('service_id')
         stylist_id = request.form.get('stylist_id')
-        date = request.form.get('date')                 # YYYY-MM-DD
-        time = request.form.get('booking_time')         # HH:MM
+        date = request.form.get('date')                
+        time = request.form.get('booking_time')         
         customer_email = request.form.get('customer_email') or None
 
-       
         start_dt = f"{date} {time}:00"
         duration_row = conn.execute("SELECT service_duration_min FROM services WHERE service_id = ?", (service_id,)).fetchone()
         if not duration_row:
             conn.close()
-            flash("Selected service not found", "danger")
+            #flash("Selected service not found", "danger")
             return redirect(url_for('Book'))
         duration_min = int(duration_row["service_duration_min"])
 
-        
         hh, mm = map(int, time.split(':'))
         total_min = hh*60 + mm
         if total_min < 8*60 or total_min > 17*60:
             conn.close()
             flash("Unavailable during non-business hours", "danger")
             return redirect(url_for('Book'))
-        if (total_min % 5) != 0:
-            conn.close()
-            flash("Please select a different time", "danger")
-            return redirect(url_for('Book'))
-
         
         if total_min + duration_min > 17*60:
             conn.close()
             flash("Service not available during non-business hours", "danger")
             return redirect(url_for('Book'))
 
-        
-        if not is_slot_available(conn, stylist_id, start_dt, duration_min):
-            conn.close()
-            flash("Session unavailable", "danger")
-            return redirect(url_for('Book'))
-
-       
         new_id = conn.execute(
             "INSERT INTO bookings (customer_email, service_id, stylist_id, start_datetime, duration_min) VALUES (?, ?, ?, ?, ?)",
             (customer_email, service_id, stylist_id, start_dt, duration_min)
@@ -116,9 +101,13 @@ def Book():
                 if is_slot_available(conn, selected_stylist, start_dt, duration_min):
                     slots.append(t)
     conn.close()
-    return render_template("Book.html", services=services, stylists=stylists,
-                           slots=slots, selected_service=selected_service,
-                           selected_date=selected_date, selected_stylist=selected_stylist)
+    return render_template("Book.html", 
+                           services=services, 
+                           stylists=stylists,
+                           slots=slots, 
+                           selected_service=selected_service,
+                           selected_date=selected_date, 
+                           selected_stylist=selected_stylist)
 
 @app.route("/login")
 def login():
@@ -198,7 +187,6 @@ def customer_login():
 
 @app.route("/customer_homepage")
 def customer_homepage():
-    # User is not logged in → send them back to login page
     if 'customer_id' not in session:
         return redirect(url_for('customer_login'))
 
@@ -268,17 +256,25 @@ def Inventory_levels():
 
     return render_template("Inventory_levels.html", products=product_list)
 
-@app.route("/My_Schedule")
+@app.route("/My_Schedule", methods=['GET', 'POST'])
 def My_Schedule():
     stylist_id = request.args.get('stylist_id') 
+    import datetime
+    if request.method == 'POST':
+        booking_id = request.form.get('booking_id')
+        conn = get_db_connection()
+        conn.execute("DELETE FROM bookings WHERE id = ?", (booking_id,))
+        conn.commit()
+        conn.close()
+        return redirect(url_for('My_Schedule', stylist_id=stylist_id))
+    
     conn = get_db_connection()
 
 
     stylists = conn.execute(
         "SELECT hairdressor_id AS id, hairdressor_name || ' ' || hairdressor_surname AS name FROM hairdressor"
     ).fetchall()
-
-
+     
     q = """
       SELECT b.id, b.start_datetime, b.duration_min, b.end_datetime,
              s.service_name, h.hairdressor_name || ' ' || h.hairdressor_surname AS stylist_name,
@@ -314,7 +310,12 @@ def My_Schedule():
         })
 
     conn.close()
-    return render_template("My_Schedule.html", bookings=bookings, stylists=stylists, selected_stylist=stylist_id)
+
+    
+    return render_template("My_Schedule.html",
+                            bookings=bookings, 
+                            stylists=stylists, 
+                            selected_stylist=stylist_id)
 
 @app.route("/testimonials")
 def testimonials():
@@ -326,3 +327,4 @@ if __name__ == "__main__":
 @app.route('/Customer_Schedule')
 def Customer_Schedule():
     return render_template("Customer_Schedule.html")
+

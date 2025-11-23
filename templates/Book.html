@@ -232,7 +232,7 @@ input[type="radio"] {
   </form>
 
 
-  {% if slots %}
+  {% if slots %}s
   <form method="post" class="row g-2 mt-3">
     <input type="hidden" name="service_id" value="{{ selected_service }}">
     <input type="hidden" name="date" value="{{ selected_date }}">
@@ -248,7 +248,7 @@ input[type="radio"] {
     </div>
 
     <div class="col-md-4">
-      <label class="form-label">Your email (optional)</label>
+      <label class="form-label">Your email (required)</label>
       <input type="email" name="customer_email" class="form-control" placeholder="you@example.com">
     </div>
 
