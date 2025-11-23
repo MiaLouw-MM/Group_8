@@ -37,33 +37,33 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#">
-        <img src="images/Curly.png" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
+        <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
       </a>
       <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
         <li class="nav-item">
-          <a class="nav-link" href="index.html" aria-current="page">Home</a>
+          <a class="nav-link" href="{{ url_for('index')}}" aria-current="page">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Services.html">Services</a>
+          <a class="nav-link" href="{{ url_for('Services')}}">Services</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="AboutUs.html">About Us</a>
+          <a class="nav-link" href="{{ url_for ('AboutUs')}}">About Us</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="Book.html">Schedule a session</a>
+          <a class="nav-link" href="{{ url_for ('Book')}}">Schedule a session</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="products.html">Products</a>
+          <a class="nav-link" href="{{url_for ('products')}}">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="login.html">Login</a>
+          <a class="nav-link active" href="{{ url_for ('login')}}">Login</a>
         </li>
       </ul>
     </div>
   </nav>
 
   <main>
-    <img src="images/Curly.png" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
+    <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="300" height="200" class="d-inline-block align-text-top mx-auto d-block mt-4">
     <h1 class="text-center">Welcome</h1>
     <br>
     
@@ -83,7 +83,7 @@
   <footer class="bg-light text-center text-lg-start border-top mt-5">
     <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
       <div class="mb-3 mb-md-0">
-        <img src="images/Curly.png" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+        <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
         <span class="ms-2 fw-semibold">© 2025 Curly.</span>
       </div>
 

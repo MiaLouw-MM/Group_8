@@ -69,6 +69,30 @@ def Services():
 
 @app.route("/customer_login")
 def customer_login():
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+
+        conn = get_db_connection()
+        customer = conn.execute(
+            'SELECT * FROM customer WHERE customer_email = ? AND password = ?',
+            (email, password)
+        ).fetchone()
+        conn.close()
+
+        if customer:
+            # Save customer info in session
+            session['customer_id'] = customer['customer_id']
+            session['customer_name'] = customer['customer_name']
+            session['customer_surname'] = customer['customer_surname']
+            
+            image_name = customer['customer_name'].lower() + ".jpeg"
+            session['customer_image'] = image_name
+            
+            return redirect(url_for('cutomer_homepage'))
+        else:
+            flash('Invalid email or password')
+            return redirect(url_for('customer_login'))
     return render_template("customer_login.html")  
 
 @app.route("/hairdressor_login", methods=['GET', 'POST'])
