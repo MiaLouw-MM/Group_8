@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Website Design</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+  .navbar-nav .nav-link:hover {
+        color: blue !important; /* Bootstrap primary blue */
+      } 
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      main {
+        flex: 1;
+      }
+
+</style>  
+   
+</head>
+
+<body>
+
+  
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+          <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
+        </a>
+        <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="index.html" aria-current="page" href="#">Home</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link active" href="{{ url_for('hairdresser_homepage')}}" >Customer home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('My_Schedule')}}" >Schedule</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('Inventory_levels')}}">Inventory levels</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
+          -->
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('index')}}">Back to home page</a>
+          </li>
+        </ul>
+       
+      </div>
+    </nav>
+  <main class="flex-grow-1">
+  <div class="container mt-4">
+      <h1 class="text-center">Welcome {{ session['hairdresser_name'] }}</h1>
+      <img src="{{ url_for('static', filename='images/' + image) }}"
+     width="300" height="450"
+     style="display: block; margin: 0 auto;">
+    </div>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>    
+
+    <footer class="bg-light text-center text-lg-start border-top mt-5">
+  <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+
+    <!-- Left side: logo or name -->
+    <div class="mb-3 mb-md-0">
+      <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+      <span class="ms-2 fw-semibold">© 2025 Hairdresser org.</span>
+    </div>
+
+    <!-- Right side: social media links -->
+    <div>
+      <a href="https://www.instagram.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
+        <i class="bi bi-instagram fs-4"></i>
+      </a>
+      <a href="https://www.facebook.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
+        <i class="bi bi-facebook fs-4"></i>
+      </a>
+      <a href="https://www.tiktok.com/@yourhandle" target="_blank" class="text-dark">
+        <i class="bi bi-tiktok fs-4"></i>
+      </a>
+    </div>
+
+  </div>
+</footer>
+
+  </body>
+
+
+</html>
