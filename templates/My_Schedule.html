@@ -80,6 +80,19 @@
       </div>
     </nav>
 
+  <form method="GET" action="{{ url_for('My_Schedule') }}">
+  <label for="stylist_id">Filter by Schedule:</label>
+  <select name="stylist_id" id="stylist_id" onchange="this.form.submit()">
+    <option value="">All Schedules</option>
+    {% for s in stylists %}
+      <option value="{{ s['id'] }}" {% if selected_stylist == s['id'] %}selected{% endif %}>
+        {{ s['name'] }}
+      </option>
+    {% endfor %}
+  </select>
+</form>
+
+
   <main class="container py-4">
   <h2 class="mb-3">Simple Schedule</h2>
 
