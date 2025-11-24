@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <title>Hairdresser Org.</title>
-    <link rel="stylesheet" href="css/bootstrap.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
     <style>
       .fade-style {
           position: relative;
@@ -18,6 +18,10 @@
           mask-repeat: no-repeat;
           -webkit-mask-repeat: no-repeat;
       }
+
+      .navbar-nav .nav-link:hover {
+      color: blue !important;
+  }
     </style>
 
 </head>
@@ -25,7 +29,7 @@
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
           <a class="navbar-brand" href="#">
-          <img src="images/Curly.png" alt="Logo" width="100" height="60" class="d-inline-block align-text-top">
+          <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="100" height="60" class="d-inline-block align-text-top">
         </a>
         <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
           <li class="nav-item">
@@ -70,7 +74,7 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><i class="bi bi-person-fill me-2"></i> Drew Landon</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">drew_landon24431</h6>
-                <p class="card-text text-align: justify;">I NEED to get more of this shampoo! It makes my hair so soft and smooth. Do you know what makes it that much better? It is signature Curly. shampoo with aloe vera infused and a pleasant lavender scent. How do you do this?</p>
+                <p class="card-text" style="text-align: justify;">I NEED to get more of this shampoo! It makes my hair so soft and smooth. Do you know what makes it that much better? It is signature Curly. shampoo with aloe vera infused and a pleasant lavender scent. How do you do this?</p>
                 
                 <div class="mb-2 text-center">
                     <i class="bi bi-star-fill text-warning"></i>
@@ -81,9 +85,9 @@
                 </div>
                 
                 <div class="mt-auto">    
-                    <a href="products.html" class="card-link">Products</a>
-                    <a href="Services.html" class="card-link">Services</a>
-                    <a href="AboutUs.html" class="card-link">Our Stylists</a>
+                    <a href="{{ url_for('products') }}" class="card-link">Products</a>
+                    <a href="{{ url_for('Services')}}" class="card-link">Services</a>
+                    <a href="{{ url_for('AboutUs')}}" class="card-link">Our Stylists</a>
                 </div>
             </div>
             </div>
@@ -94,7 +98,7 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><i class="bi bi-person-fill me-2"></i> Courtney Mason</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">courtneyLovesCats_5558</h6>
-                <p class="card-text text-align: justify;">I was nervous to dye my hair, but Charlise was super supportive. She gave interesting insight on different hair textures and face shapes! I highly recommend booking a session if you want to understand your hair better. Thank You Curly!</p>
+                <p class="card-text" style="text-align: justify;">I was nervous to dye my hair, but Charlise was super supportive. She gave interesting insight on different hair textures and face shapes! I highly recommend booking a session if you want to understand your hair better. Thank You Curly!</p>
                 
                 <div class="mb-2 text-center">
                     <i class="bi bi-star-fill text-warning"></i>
@@ -105,9 +109,9 @@
                 </div>
                 
                 <div class="mt-auto">    
-                    <a href="products.html" class="card-link">Products</a>
-                    <a href="Services.html" class="card-link">Services</a>
-                    <a href="AboutUs.html" class="card-link">Our Stylists</a>
+                    <a href="{{ url_for('products') }}" class="card-link">Products</a>
+                    <a href="{{ url_for('Services')}}" class="card-link">Services</a>
+                    <a href="{{ url_for('AboutUs')}}" class="card-link">Our Stylists</a>
                 </div>
             </div>
             </div>
@@ -118,7 +122,7 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><i class="bi bi-person-fill me-2"></i> Sullivan Declan</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">sully_d1234</h6>
-                <p class="card-text text-align: justify;">My friend, Amelie, recommended Hairdresser org. to me. I was sceptical, but now I am so glad I listened. They are the absolute best. Kind people and amazing locations! Curly… wait… they don’t love you like I love you.</p>
+                <p class="card-text" style="text-align: justify;">My friend, Amelie, recommended Hairdresser org. to me. I was sceptical, but now I am so glad I listened. They are the absolute best. Kind people and amazing locations! Curly… wait… they don’t love you like I love you.</p>
                 
                 <div class="mb-2 text-center">
                     <i class="bi bi-star-fill text-warning"></i>
@@ -129,9 +133,9 @@
                 </div>
                 
                 <div class="mt-auto">    
-                    <a href="products.html" class="card-link">Products</a>
-                    <a href="Services.html" class="card-link">Services</a>
-                    <a href="AboutUs.html" class="card-link">Our Stylists</a>
+                    <a href="{{ url_for('products')}}" class="card-link">Products</a>
+                    <a href="{{ url_for('Services')}}" class="card-link">Services</a>
+                    <a href="{{ url_for('AboutUs')}}" class="card-link">Our Stylists</a>
                 </div>
             </div>
             </div>
@@ -149,7 +153,7 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><i class="bi bi-person-fill me-2"></i> Brenda Sady</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">brendaaa_3456</h6>
-                <p class="card-text text-align: justify;">I felt like I was being heard and my hairdresser was very attentive and gave me great advise.</p>
+                <p class="card-text" style="text-align: justify;">I felt like I was being heard and my hairdresser was very attentive and gave me great advise.</p>
                 
                 <div class="mb-2 text-center">
                     <i class="bi bi-star-fill text-warning"></i>
@@ -160,9 +164,9 @@
                 </div>
                 
                 <div class="mt-auto">    
-                    <a href="products.html" class="card-link">Products</a>
-                    <a href="Services.html" class="card-link">Services</a>
-                    <a href="AboutUs.html" class="card-link">Our Stylists</a>
+                    <a href="{{ url_for('products')}}" class="card-link">Products</a>
+                    <a href="{{ url_for('Services')}}" class="card-link">Services</a>
+                    <a href="{{ url_for('AboutUs')}}" class="card-link">Our Stylists</a>
                 </div>
             </div>
             </div>
@@ -173,7 +177,7 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><i class="bi bi-person-fill me-2"></i> Lee Daxtor</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">lee_and_stacy_789</h6>
-                <p class="card-text text-align: justify;">The Hairdresser (Jake) was a great stylist! I am definitely considering booking another session!</p>
+                <p class="card-text" style="text-align: justify;">The Hairdresser (Jake) was a great stylist! I am definitely considering booking another session!</p>
                 
                 <div class="mb-2 text-center">
                     <i class="bi bi-star-fill text-warning"></i>
@@ -184,9 +188,9 @@
                 </div>
                 
                 <div class="mt-auto">
-                    <a href="products.html" class="card-link">Products</a>
-                    <a href="Services.html" class="card-link">Services</a>
-                    <a href="AboutUs.html" class="card-link">Our Stylists</a>
+                    <a href="{{ url_for('products') }}" class="card-link">Products</a>
+                    <a href="{{ url_for('Services') }}" class="card-link">Services</a>
+                    <a href="{{ url_for('AboutUs') }}" class="card-link">Our Stylists</a>
                 </div>
             </div>
             </div>
@@ -197,7 +201,7 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><i class="bi bi-person-fill me-2"></i> Morgan Wally</h5>
                 <h6 class="card-subtitle mb-2 text-body-secondary">texas_love_9365</h6>
-                <p class="card-text text-align: justify;">Caty is the best hairdresser ever. She is very professional and kind. 😊</p>
+                <p class="card-text" style="text-align: justify;">Caty is the best hairdresser ever. She is very professional and kind. 😊</p>
                 
                 <div class="mb-2 text-center">
                     <i class="bi bi-star-fill text-warning"></i>
@@ -208,9 +212,9 @@
                 </div>
                 
                 <div class="mt-auto">    
-                    <a href="products.html" class="card-link">Products</a>
-                    <a href="Services.html" class="card-link">Services</a>
-                    <a href="AboutUs.html" class="card-link">Our Stylists</a>
+                    <a href="{{ url_for('products') }}" class="card-link">Products</a>
+                    <a href="{{ url_for('Services') }}" class="card-link">Services</a>
+                    <a href="{{ url_for('AboutUs') }}" class="card-link">Our Stylists</a>
                 </div>
             </div>
             </div>
@@ -224,7 +228,7 @@
     <div class="col-md-8 text-center">
         <p class="lead">Are you logged in?</p>
         <button class="btn btn-primary">
-            <a href="login.html" class="text-white text-decoration-none">Login</a>
+            <a href="{{ url_for('login') }}" class="text-white text-decoration-none">Login</a>
         </button>
         <hr class="my-4">
         <div class="mb-3">
@@ -246,8 +250,8 @@
             </div>
         
             <div class="col-md-4 text-center">
-                <img src="images/white.png" class="card-img-top img-fluid" alt="Cannot load image">
-                <img src="images/purple.png" class="d-inline-block align-text-top" width="450" height="340" alt="Cannot load image">
+                <img src="{{ url_for('static', filename='images/white.png')}}" class="card-img-top img-fluid" alt="Cannot load image">
+                <img src="{{ url_for('static', filename='images/purple.png')}}" class="d-inline-block align-text-top" width="450" height="340" alt="Cannot load image">
             </div> 
   </div>
 </div>
@@ -255,7 +259,7 @@
 <footer class="bg-light text-center text-lg-start border-top mt-5">
   <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
     <div class="mb-3 mb-md-0">
-      <img src="images/Curly.png" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
+      <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
       <span class="ms-2 fw-semibold">© 2025 Curly.</span>
     </div>
 

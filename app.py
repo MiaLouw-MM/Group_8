@@ -154,9 +154,9 @@ def Services():
     conn.close()
 
     service_images = {
-        'WomanTrim': "Womans Trim.jpg",
-        'WomanCut': "Womans Cut.jpg",
-        'MenCut': "Mens cut.webp",
+        'WomanTrim': "WomanTrim.jpg",
+        'WomanCut': "WomanCut.jpg",
+        'MenCut': "MenCut.webp",
         'Balayage': 'Balayage.jpg',
         'Highlights': 'Highlights.jpg',
         'Semi-permanent colour': 'Semi-permanent colour.webp',
