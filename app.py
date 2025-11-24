@@ -185,6 +185,7 @@ def customer_login():
 
         if customer:
             session['customer_id'] = customer['customer_id']
+            session['customer_email'] = customer['email']
             session['customer_name'] = customer['name']
             session['customer_surname'] = customer['surname']
             
@@ -199,15 +200,63 @@ def customer_login():
 
 @app.route("/customer_homepage")
 def customer_homepage():
-    if 'customer_id' not in session:
-        return redirect(url_for('customer_login'))
+    if "customer_email" not in session:
+        return redirect("/customer_login")
+
+    # Connect to database
+    conn = get_db_connection()
+
+    # Get customer info
+    customer = conn.execute(
+        "SELECT * FROM customer WHERE email = ?",
+        (session["customer_email"],)
+    ).fetchone()
+
+    # Get next upcoming booking
+    upcoming = conn.execute("""
+    SELECT 
+        b.*, 
+        s.service_name, 
+        h.hairdressor_name || ' ' || h.hairdressor_surname AS stylist_name
+    FROM bookings b
+    JOIN services s ON b.service_id = s.service_id
+    JOIN hairdressor h ON b.stylist_id = h.hairdressor_id
+    WHERE b.customer_email = ?
+    AND datetime(b.start_datetime) > datetime('now')
+    ORDER BY datetime(b.start_datetime)
+    LIMIT 1;
+""", (session["customer_email"],)).fetchone()
+
+
+    conn.close()
 
     return render_template(
-    "customer_homepage.html",
-    name=session['customer_name'],
-    surname=session['customer_surname'],
-    customer_image=session['customer_image']
-)
+        "customer_homepage.html",
+        customer_name=customer["name"],
+        customer_image=customer["customer_image"],     # whatever your column is called
+        upcoming_booking=upcoming
+    )
+
+@app.route("/customer_bookings")
+def customer_bookings():
+    if "customer_email" not in session:
+        return redirect("/customer_login")
+
+    conn = get_db_connection()
+
+    bookings = conn.execute("""
+        SELECT b.*, s.service_name, h.hairdressor_name AS stylist_name
+        FROM bookings b
+        JOIN services s ON b.service_id = s.service_id
+        JOIN hairdressor h ON b.stylist_id = h.hairdressor_id
+        WHERE b.customer_email = ?
+        ORDER BY datetime(b.start_datetime) DESC;
+    """, (session["customer_email"],)).fetchall()
+
+    conn.close()
+
+    return render_template("customer_bookings.html", bookings=bookings)
+
 
 
 @app.route("/hairdressor_login", methods=['GET', 'POST'])
