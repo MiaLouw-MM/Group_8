@@ -23,25 +23,24 @@
   <div class="container my-5">
     <h1 class="mb-4 text-center">My Bookings</h1>
 
-    {% if bookings %}
-      <div class="row">
         {% for b in bookings %}
-          <div class="col-md-6">
-            <div class="card booking-card">
-              <div class="card-body">
-                <h5 class="card-title">{{ b.service_name }}</h5>
-                <p><strong>Stylist:</strong> {{ b.stylist_name }}</p>
-                <p><strong>Date & Time:</strong> {{ b.start_datetime }}</p>
-                <p><strong>Duration:</strong> {{ b.duration_min }} min</p>
-                <p><strong>Status:</strong> {{ b.status }}</p>
-              </div>
-            </div>
-          </div>
-        {% endfor %}
+    <div class="card mb-3 mx-auto" style="max-width: 500px;">
+      <div class="card-body">
+        <p><strong>Service:</strong> {{ b.service_name }}</p>
+        <p><strong>Stylist:</strong> {{ b.stylist_name }}</p>
+        <p><strong>Date:</strong> {{ b.start_datetime }}</p>
+        <p><strong>Duration:</strong> {{ b.duration_min }} min</p>
+        <p><strong>Status:</strong> {{ b.status }}</p>
+
+        <!-- Cancel button -->
+        <form method="POST" action="{{ url_for('cancel_booking') }}">
+            <input type="hidden" name="booking_id" value="{{ b.id }}">
+            <button type="submit" class="btn btn-danger btn-sm mt-2">Cancel Booking</button>
+        </form>
       </div>
-    {% else %}
-      <p class="text-center">You have no bookings yet.</p>
-    {% endif %}
+    </div>
+    {% endfor %}
+
 
     <div class="text-center mt-4">
       <a href="{{ url_for('customer_homepage') }}" class="btn btn-primary">Back to Homepage</a>

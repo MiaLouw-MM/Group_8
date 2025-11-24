@@ -257,6 +257,23 @@ def customer_bookings():
 
     return render_template("customer_bookings.html", bookings=bookings)
 
+@app.route("/cancel_booking", methods=["POST"])
+def cancel_booking():
+    if "customer_email" not in session:
+        return redirect("/customer_login")
+
+    booking_id = request.form.get("booking_id")
+
+    conn = get_db_connection()
+    conn.execute("DELETE FROM bookings WHERE id = ? AND customer_email = ?",
+                 (booking_id, session["customer_email"]))
+    conn.commit()
+    conn.close()
+
+    flash("Booking cancelled successfully", "success")
+    return redirect(url_for("customer_bookings"))
+
+
 
 
 @app.route("/hairdressor_login", methods=['GET', 'POST'])
