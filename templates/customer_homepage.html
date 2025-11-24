@@ -70,21 +70,29 @@
 
     </div>
 
+    <div class="text-center mt-5">
     <h2>Next Upcoming Booking</h2>
+</div>
 
-    {% if upcoming_booking %}
-        <div class="booking-card">
-            <p><strong>Service:</strong> {{ upcoming_booking.service_name }}</p>
-            <p><strong>Stylist:</strong> {{ upcoming_booking.stylist_name }}</p>
-            <p><strong>Date & Time:</strong> {{ upcoming_booking.start_datetime }}</p>
-            <p><strong>Duration:</strong> {{ upcoming_booking.duration_min }} min</p>
-        </div>
-    {% else %}
-        <p>You have no upcoming bookings.</p>
-    {% endif %}
+{% if upcoming_booking %}
+  <div class="card mx-auto my-3" style="max-width: 500px;">
+    <div class="card-body">
+      <h5 class="card-title">{{ upcoming_booking.service_name }}</h5>
+      <p class="card-text"><strong>Stylist:</strong> {{ upcoming_booking.stylist_name }}</p>
+      <p class="card-text"><strong>Date & Time:</strong> {{ upcoming_booking.start_datetime }}</p>
+      <p class="card-text"><strong>Duration:</strong> {{ upcoming_booking.duration_min }} min</p>
+      <span class="badge bg-success">{{ upcoming_booking.status }}</span>
+    </div>
+  </div>
+{% else %}
+  <p>You have no upcoming bookings.</p>
+{% endif %}
 
-    <a href="/customer_bookings" class="btn">View All My Bookings</a>
-    <a href="/Book" class="btn">Make a Booking</a>
+<div class="d-flex justify-content-center mt-4 gap-3">
+    <a href="{{ url_for('customer_bookings') }}" class="btn btn-primary">View All My Bookings</a>
+    <a href="{{ url_for('Book') }}" class="btn btn-primary">Make a Booking</a>
+</div>
+
   </div>
 
 
