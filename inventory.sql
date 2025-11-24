@@ -1,4 +1,4 @@
-/*create TABLE PRODUCTS(
+create TABLE PRODUCTS(
 product_id INTEGER PRIMARY KEY AUTOINCREMENT,
 product_name VARCHAR(40) NOT NULL,
 product_category VARCHAR(30) NOT NULL,
@@ -104,7 +104,7 @@ VALUES
 (1, 7, 'Lerato Mokoena', '2025-10-22 09:00:00'),
 (5, 5, 'Natasha Daniels', '2025-10-22 16:40:00');*/
 
-/*create table customer(
+create table customer(
 name varchar(100) NOT NULL,
 surname varchar(100) NOT NULL,
 email varchar(150) UNIQUE NOT NULL,
@@ -122,7 +122,7 @@ VALUES
 ('David', 'Brown', 'david.brown@example.com', '555-3456', 80, 'password4');*/
 
 
-/*CREATE TABLE hairdressor (
+CREATE TABLE hairdressor (
     hairdressor_id INTEGER PRIMARY KEY AUTOINCREMENT,
     hairdressor_name VARCHAR(100) NOT NULL,
     hairdressor_surname VARCHAR(100) NOT NULL,
@@ -141,7 +141,7 @@ VALUES
 ('Josh', 'King', '0795555555', "joshB@hairdressor.com", 'password4');
 
 
-DELETE FROM Bookings;
+
 
 
 PRAGMA foreign_keys=ON;
@@ -166,26 +166,26 @@ BEGIN
   UPDATE bookings
   SET end_datetime = datetime(NEW.start_datetime, '+' || NEW.duration_min || ' minutes')
   WHERE id = NEW.id;
-END;*/
+END;
 SELECT * FROM customer;
 --ALTER TABLE customer
---ADD COLUMN customer_image VARCHAR(100);
+--ADD COLUMN password TEXT DEFAULT 'N/A';
 
-/*UPDATE customer
-SET customer_image = 'Alice.jpeg'
+UPDATE customer
+SET password = 'password1'
 WHERE name = 'Alice' AND surname = 'Johnson';
 
 UPDATE customer
-SET customer_image = 'Bob.jpeg'
+SET password = 'password2'
 WHERE name = 'Bob' AND surname = 'Smith';
 
 UPDATE customer
-SET customer_image = 'Carol.jpeg'
-WHERE name = 'Carol' AND surname = 'Williams';*/
+SET password = 'password3'
+WHERE name = 'Carol' AND surname = 'Williams';
 
-/*UPDATE customer
-SET customer_id = '4'
-WHERE name = 'David' AND surname = 'Brown';*/
+UPDATE customer
+SET password = 'password4'
+WHERE name = 'David' AND surname = 'Brown';
 
 
 
