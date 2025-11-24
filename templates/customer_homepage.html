@@ -55,10 +55,18 @@
           <!-- <li class="nav-item">
             <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
           -->
+          <li class="nav-item">
+            <a href="{{ url_for('customer_bookings') }}" class="nav-link">Bookings</a>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('Book') }}">Book Now</a>
+          </li>
 
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('index')}}">Back to home page</a>
           </li>
+
         </ul>
        
       </div>

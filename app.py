@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import sqlite3
-import datetime
+from datetime import datetime, timedelta
 
 
 
@@ -28,18 +28,21 @@ def generate_slots_for_date(duration_min, date_str):
     return slots
 
 
+
 def is_slot_available(conn, stylist_id, start_dt_str, duration_min):
-    end_dt_str = (datetime.datetime.strptime(start_dt_str, "%Y-%m-%d %H:%M:%S")
-                  + datetime.timedelta(minutes=int(duration_min))).strftime("%Y-%m-%d %H:%M:%S")
+    start_dt = datetime.strptime(start_dt_str, "%Y-%m-%d %H:%M:%S")
+    end_dt = start_dt + timedelta(minutes=int(duration_min))
+    end_dt_str = end_dt.strftime("%Y-%m-%d %H:%M:%S")
+
     q = """
       SELECT 1 FROM bookings
       WHERE stylist_id = ?
         AND NOT (end_datetime <= ? OR start_datetime >= ?)
       LIMIT 1
     """
-    
     cur = conn.execute(q, (stylist_id, start_dt_str, end_dt_str)).fetchone()
     return cur is None
+
 
 @app.route("/")
 def index():
@@ -274,6 +277,51 @@ def cancel_booking():
     return redirect(url_for("customer_bookings"))
 
 
+@app.route("/Customer_Schedule")
+def Customer_Schedule():
+    if "customer_email" not in session:
+        return redirect("/customer_login")
+
+    conn = get_db_connection()
+
+    rows = conn.execute("""
+        SELECT b.*, 
+               s.service_name,
+               h.hairdressor_name || ' ' || h.hairdressor_surname AS stylist_name,
+               h.hairdressor_id
+        FROM bookings b
+        JOIN services s ON b.service_id = s.service_id
+        JOIN hairdressor h ON b.stylist_id = h.hairdressor_id
+        WHERE b.customer_email = ?
+        ORDER BY datetime(b.start_datetime)
+    """, (session["customer_email"],)).fetchall()
+
+    conn.close()
+
+    bookings = []
+    for r in rows:
+        dt = datetime.strptime(r["start_datetime"], "%Y-%m-%d %H:%M:%S")
+        bookings.append({
+            "service": r["service_name"],
+            "stylist": r["stylist_name"],
+            "start": r["start_datetime"],
+            "id": r["id"],
+            "day": int(dt.strftime("%u")),     # Monday=1
+            "hour": int(dt.strftime("%H")),
+            "minute": int(dt.strftime("%M")),
+            "duration": max(1, r["duration_min"] // 60),
+            "color_class": f"stylist-{r['hairdressor_id']}",
+        })
+
+    # ⭐ Pass current weekday to the template
+    current_weekday = int(datetime.now().strftime("%u"))  # Monday=1
+
+    return render_template(
+        "customer_schedule.html",
+        bookings=bookings,
+        current_weekday=current_weekday
+    )
+
 
 
 @app.route("/hairdressor_login", methods=['GET', 'POST'])
@@ -416,11 +464,6 @@ def update_product():
     conn.commit()
     conn.close()
     return redirect(url_for('Inventory_levels')) 
-
-
-@app.route('/Customer_Schedule')
-def Customer_Schedule():
-    return render_template("Customer_Schedule.html")
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -260,6 +260,13 @@ input[type="radio"] {
     <div class="alert alert-warning mt-3">No available slots for selected service/date/stylist.</div>
   {% endif %}
 
+  <div class="text-center mt-4">
+    <a href="{{ url_for('customer_homepage') }}" class="btn btn-success">
+        Customer Homepage
+    </a>
+</div>
+
+
 </main>
 {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
