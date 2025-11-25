@@ -10,7 +10,7 @@
 
 <style>
   .navbar-nav .nav-link:hover {
-        color: blue !important; /* Bootstrap primary blue */
+        color: blue !important; 
       } 
       html, body {
         height: 100%;
@@ -40,21 +40,14 @@
           <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="90" height="50" class="d-inline-block align-text-top">
         </a>
         <ul class="navbar-nav justify-content-center mb-2 mb-lg-0 w-100 nav-underline">
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="index.html" aria-current="page" href="#">Home</a>
-          </li> -->
+          
           <li class="nav-item">
             <a class="nav-link active" href="{{ url_for('customer_homepage')}}" >Customer home</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{ url_for('Customer_Schedule')}}" >Schedule</a>
           </li>
-          <!--<li class="nav-item">
-            <a class="nav-link" href="{{ url_for('Inventory_levels')}}">Inventory levels</a>
-          </li> -->
-          <!-- <li class="nav-item">
-            <a class="nav-link active" href="Bookings.html" >Schedule a session</a>
-          -->
+          
           <li class="nav-item">
             <a href="{{ url_for('customer_bookings') }}" class="nav-link">Bookings</a>
           </li>
@@ -74,7 +67,6 @@
   <main class="flex-grow-1">
   <div class="container mt-4">
       <h1 class="text-center">Welcome {{ session['customer_name'] }}</h1>
-      <img src="{{ url_for('static', filename='images/' + session['customer_image']) }}" width="300" height="450" style="display: block; margin: 0 auto;" alt="{{ customer_name }}">
 
     </div>
 
@@ -110,13 +102,13 @@
     <footer class="bg-light text-center text-lg-start border-top mt-5">
   <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
 
-    <!-- Left side: logo or name -->
+   
     <div class="mb-3 mb-md-0">
       <img src="{{ url_for('static', filename='images/Curly.png') }}" alt="Logo" width="80" height="45" class="d-inline-block align-text-top">
       <span class="ms-2 fw-semibold">© 2025 Hairdresser org.</span>
     </div>
 
-    <!-- Right side: social media links -->
+   
     <div>
       <a href="https://www.instagram.com/yourhandle" target="_blank" class="text-dark me-3 text-decoration-none">
         <i class="bi bi-instagram fs-4"></i>
